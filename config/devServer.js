@@ -6,22 +6,20 @@ var compiler = webpack(config);
 var koa = require('koa');
 var router = require('koa-router')();
 var app = koa();
-app.use(webpackDevMiddleware(compiler, {
-    noInfo: true,
-    hot: true,
-    lazy: false,
-    historyApiFallback: true,
-    stats: {
-        colors: true // 用颜色标识
-    },
-    publicPath: config.output.publicPath
-}));
-app.use(webpackHotMiddleware(compiler));
-console.log(2);
-console.log(6);
+// app.use(webpackDevMiddleware(compiler, {
+//     noInfo: true,
+//     hot: true,
+//     lazy: false,
+//     historyApiFallback: true,
+//     stats: {
+//         colors: true // 用颜色标识
+//     },
+//     publicPath: config.output.publicPath
+// }));
+// app.use(webpackHotMiddleware(compiler));
 router.get('/', function *(next) {
     this.status = 200;
-    this.body = {"Welcome": "Hello"};
+    this.body = {"Welcome": "Hello1"};
 });
 app.use(router.routes());
 
