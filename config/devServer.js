@@ -6,6 +6,7 @@ var compiler = webpack(config);
 var koa = require('koa');
 var router = require('koa-router')();
 var app = koa();
+var routerComponent = require('../server/lib/route.js');
 // app.use(webpackDevMiddleware(compiler, {
 //     noInfo: true,
 //     hot: true,
@@ -17,11 +18,8 @@ var app = koa();
 //     publicPath: config.output.publicPath
 // }));
 // app.use(webpackHotMiddleware(compiler));
-router.get('/', function *(next) {
-    this.status = 200;
-    this.body = {"Welcome": "Hello1"};
-});
-app.use(router.routes());
+
+app.use(routerComponent.routes());
 
 
 app.listen(3000);
