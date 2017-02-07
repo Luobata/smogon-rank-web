@@ -3,7 +3,8 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var glob = require('glob');
 var srcDir = path.resolve(process.cwd(), 'src');
-var jsEntryDir = htmlEntryDir = path.resolve(srcDir, 'page')
+var jsEntryDir = path.resolve(srcDir, 'page')
+var htmlEntryDir = srcDir;
 var assetsDir = path.resolve(process.cwd(), 'assets');
 var jsDir = 'dist/';
 var libMerge = true;
@@ -106,6 +107,7 @@ files.forEach(function(filename) {
             }
 
         }
+        console.log(conf);
         config.plugins.push(new HtmlWebpackPlugin(conf));
     }
 });
