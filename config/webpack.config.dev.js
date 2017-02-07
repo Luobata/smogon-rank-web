@@ -1,52 +1,62 @@
 var path = require('path');
 var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var glob = require('glob');
 var srcDir = path.resolve(process.cwd(), 'src');
-var jsEntryDir = path.resolve(srcDir, 'dist')
+var jsEntryDir = htmlEntryDir = path.resolve(srcDir, 'page')
+var assetsDir = path.resolve(process.cwd(), 'assets');
 var jsDir = 'dist/';
 var libMerge = true;
 var singleModule = [];
 var env = process.env.NODE_ENV;
 
-module.exports = {
-  devtool: 'cheap-module-eval-source-map',
-  entry: [
-    'webpack-hot-middleware/client?noInfo=true&reload=true',
-    // './dist/test'
-    './config/devServer'
-  ],
-  // entry: getEntry(),
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/'
-  },
-  plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin('common.js')
-  ],
-  module: {
-    loaders: [
-      {
-          test: /\.json$/,
-          loader: "json-loader"
-      },
-      {
-          test: /\.html$/,
-          loader: "html-loader"
-      }
-    ]
-  },
-  resolveLoader: { root: path.join(__dirname, "node_modules") },
-  resolve: {
-    extensions: [".web.js", ".js", ".node"],
-    root: path.join(__dirname, "node_modules")
-  },
-  node: {
-      fs: 'empty'
-  }
+var config = {
+    devtool: 'cheap-module-eval-source-map',
+    entry: getEntry(),
+    output: {
+        path: path.join(__dirname, 'assets'),
+        filename: 'bundle.js',
+        publicPath: '/'
+    },
+    plugins: [
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoErrorsPlugin(),
+        new webpack.optimize.CommonsChunkPlugin('common.js')
+    ],
+    module: {
+        loaders: [
+        {
+            test: /\.json$/,
+            loader: "json-loader"
+        },
+        {
+            test: /\.html$/,
+            loader: "html-loader"
+        },
+        {
+            test: /\.js$/,
+            loaders: ['babel'],
+            exclude: /node_modules/,
+            include: path.join(process.cwd(), 'src')
+        },
+        {
+            test: /\.vue$/,
+            loader: 'vue'
+        }
+        ]
+    },
+    resolveLoader: { root: path.join(__dirname, "node_modules") },
+    resolve: {
+        extensions: ["", ".web.js", ".js", ".node", '.vue'],
+        root: path.join(__dirname, "node_modules"),
+        alias: {
+            'vue$': 'vue/dist/vue.common.js'
+        }
+    },
+    node: {
+        fs: 'empty'
+    }
 };
 function getEntry() {
     var entrys = glob.sync(path.resolve(jsEntryDir, '**/*.js'));
@@ -71,4 +81,33 @@ function getEntry() {
         });
     }
     return map;
-}
+};
+
+var files = glob.sync(path.resolve(htmlEntryDir, '**/*.html'));
+files.forEach(function(filename) {
+    var m = filename.match(/(.+)\.html$/);
+    if (m) {
+        var conf = {
+            template: filename,
+            inject: true, //允许插件修改哪些内容，包括head与body
+            hash: true, //为静态资源生成hash值
+            minify: { //压缩HTML文件
+                removeComments: true, //移除HTML中的注释
+                collapseWhitespace: false //删除空白符与换行符
+            },
+            filename: filename.replace(srcDir, assetsDir)
+        };
+        var vendor = m[1].replace(srcDir + '/', '');
+        if (vendor in config.entry) {
+            if (libMerge) {
+                conf.chunks = ['lib', vendor];
+            } else {
+                conf.chunks = [vendor].concat(singleModule);
+            }
+
+        }
+        config.plugins.push(new HtmlWebpackPlugin(conf));
+    }
+});
+
+module.exports = config;

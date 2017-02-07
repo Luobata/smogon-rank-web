@@ -1,0 +1,6 @@
+{
+    "vervose": true,
+    "ignore": [
+        "src/*"
+    ]
+}

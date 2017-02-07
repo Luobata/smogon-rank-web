@@ -1,6 +1,6 @@
 var router = require('koa-router')();
 
-router.get('/', function *(next) {
+router.get('/123', function *(next) {
     this.status = 200;
     this.body = {"Welcome": "Hello1"};
 });
