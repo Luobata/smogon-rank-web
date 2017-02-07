@@ -6,7 +6,7 @@ var srcDir = path.resolve(process.cwd(), 'src');
 var jsEntryDir = path.resolve(srcDir, 'page')
 var htmlEntryDir = srcDir;
 var assetsDir = path.resolve(process.cwd(), 'assets');
-var jsDir = 'dist/';
+var jsDir = 'src/page/';
 var libMerge = true;
 var singleModule = [];
 var env = process.env.NODE_ENV;
@@ -15,8 +15,8 @@ var config = {
     devtool: 'cheap-module-eval-source-map',
     entry: getEntry(),
     output: {
-        path: path.join(__dirname, 'assets'),
-        filename: 'bundle.js',
+        path: path.join(process.cwd(), 'assets'),
+        filename: jsDir + '[name].js',
         publicPath: '/'
     },
     plugins: [
@@ -86,6 +86,7 @@ function getEntry() {
 
 var files = glob.sync(path.resolve(htmlEntryDir, '**/*.html'));
 files.forEach(function(filename) {
+    filename = filename.replace(/\//g, '\\');
     var m = filename.match(/(.+)\.html$/);
     if (m) {
         var conf = {

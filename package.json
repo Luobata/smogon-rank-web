@@ -12,6 +12,7 @@
     "glob": "^7.1.1",
     "koa-serve-index": "^1.1.1",
     "koa-static": "^2.1.0",
+    "koa-views": "^4.1.0",
     "nodemon": "^1.11.0"
   },
   "author": "luobata",
