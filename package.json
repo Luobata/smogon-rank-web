@@ -43,6 +43,7 @@
     "koa-webpack-hot-middleware": "1.0.3",
     "webpack": "1.12.9",
     "webpack-dev-middleware": "1.8.3",
-    "webpack-hot-middleware": "2.12.2"
+    "webpack-hot-middleware": "2.12.2",
+    "extract-text-webpack-plugin": "1.0.1"
   }
 }

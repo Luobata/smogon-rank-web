@@ -8,8 +8,10 @@ var htmlEntryDir = srcDir;
 var assetsDir = path.resolve(process.cwd(), 'assets');
 var jsDir = 'src/page/';
 var libMerge = true;
+var cssSourceMap = true;
 var singleModule = [];
 var env = process.env.NODE_ENV;
+var utils = require('./utils');
 
 var config = {
     devtool: 'cheap-module-eval-source-map',
@@ -20,31 +22,44 @@ var config = {
         publicPath: '/'
     },
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
-        new webpack.optimize.CommonsChunkPlugin('common.js')
+        new webpack.NoErrorsPlugin()
     ],
     module: {
         loaders: [
-        {
-            test: /\.json$/,
-            loader: "json-loader"
-        },
-        {
-            test: /\.html$/,
-            loader: "html-loader"
-        },
-        {
-            test: /\.js$/,
-            loaders: ['babel'],
-            exclude: /node_modules/,
-            include: path.join(process.cwd(), 'src')
-        },
-        {
-            test: /\.vue$/,
-            loader: 'vue'
-        }
+            {
+                test: /\.json$/,
+                loader: "json-loader"
+            },
+            {
+                test: /\.html$/,
+                loader: "html-loader"
+            },
+            {
+                test: /\.js$/,
+                loaders: ['babel'],
+                exclude: /node_modules/,
+                include: path.join(process.cwd(), 'src')
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue'
+            },
+            utils.styleLoaders({sourceMap: cssSourceMap})
+        ]
+    },
+    vue: {
+        loaders: utils.cssLoaders(),
+        postcss: [
+            require('autoprefixer')({
+                browsers: ['last 2 versions']
+            })
         ]
     },
     resolveLoader: { root: path.join(__dirname, "node_modules") },
@@ -86,7 +101,7 @@ function getEntry() {
 
 var files = glob.sync(path.resolve(htmlEntryDir, '**/*.html'));
 files.forEach(function(filename) {
-    filename = filename.replace(/\//g, '\\');
+    //filename = filename.replace(/\//g, '\\');
     var m = filename.match(/(.+)\.html$/);
     if (m) {
         var conf = {
