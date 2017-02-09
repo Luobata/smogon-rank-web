@@ -7,6 +7,7 @@ var jsEntryDir = path.resolve(srcDir, 'page')
 var htmlEntryDir = srcDir;
 var assetsDir = path.resolve(process.cwd(), 'assets');
 var jsDir = 'src/page/';
+var assetsSubDirectory = 'static/';
 var libMerge = true;
 var cssSourceMap = true;
 var singleModule = [];
@@ -50,6 +51,22 @@ var config = {
             {
                 test: /\.vue$/,
                 loader: 'vue'
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+                loader: 'url',
+                query: {
+                    limit: 10000,
+                    name: assetsSubDirectory + 'img/[name].[hash:7].[ext]'
+                }
+            },
+            {
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                loader: 'url',
+                query: {
+                    limit: 10000,
+                    name: assetsSubDirectory + 'fonts/[name].[hash:7].[ext]'
+                }
             },
             utils.styleLoaders({sourceMap: cssSourceMap})
         ]
@@ -123,7 +140,6 @@ files.forEach(function(filename) {
             }
 
         }
-        console.log(conf);
         config.plugins.push(new HtmlWebpackPlugin(conf));
     }
 });

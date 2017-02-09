@@ -9,6 +9,7 @@ router.get('/rank', function *(next) {
     this.status = 200;
     this.body = require('../controller/rank');
 });
+router.redirect('/a', '/rank.html');
 
 
 module.exports = router;
