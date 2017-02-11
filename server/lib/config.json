@@ -1,0 +1,53 @@
+{
+    "select": {
+        "type": [
+            {
+                "label": "单打",
+                "tag": "gen7pokebank",
+                "value": 1
+            },
+            {
+                "label": "双打",
+                "tag": "gen7pokebankdoubles",
+                "value": 2
+            }
+        ],
+        "rank": [
+            {
+                "label": "1825(高分局)",
+                "tag": {
+                    "OU": 1825,
+                    "UB": 1760
+                },
+                "value": 1
+            }
+        ],
+        "class": [
+            {
+                "label": "UB",
+                "tag": "ubers",
+                "value": 1
+            },
+            {
+                "label": "OU",
+                "tag": "ou",
+                "value": 2
+            },
+            {
+                "label": "UU",
+                "tag": "uu",
+                "value": 3
+            }
+        ],
+        "time": [
+            {
+                "label": "2017-01",
+                "value": "2017-01"
+            },
+            {
+                "label": "2016-12",
+                "value": "2016-12"
+            }
+        ]
+    }
+}

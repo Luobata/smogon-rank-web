@@ -15,7 +15,7 @@ var env = process.env.NODE_ENV;
 var utils = require('./utils');
 
 var config = {
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'eval-source-map',
     entry: getEntry(),
     output: {
         path: path.join(process.cwd(), 'assets'),
@@ -118,7 +118,7 @@ function getEntry() {
 
 var files = glob.sync(path.resolve(htmlEntryDir, '**/*.html'));
 files.forEach(function(filename) {
-    //filename = filename.replace(/\//g, '\\');
+    filename = filename.replace(/\//g, '\\');
     var m = filename.match(/(.+)\.html$/);
     if (m) {
         var conf = {

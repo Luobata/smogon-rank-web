@@ -13,6 +13,7 @@ var app = require('../components/app.vue');
 
 // global
 require('../lib/reset.v3.1.1.css');
+require('../lib/global.css');
 
 new vue({
     el: '#rank',

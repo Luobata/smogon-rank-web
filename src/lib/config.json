@@ -1,0 +1,14 @@
+{
+    "select": {
+        "type": [
+            {
+                "label": "单打",
+                "value": 1
+            },
+            {
+                "label": "双打",
+                "value": 2
+            }
+        ]
+    }
+}

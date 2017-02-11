@@ -1,6 +1,10 @@
 <template>
     <div class="doc">
         <index-header></index-header>
+        <div class="content">
+            <condition-select></condition-select>
+            <condeition-table></condeition-table>
+        </div>
     </div>
 </template>
 <style scoped>
@@ -10,6 +14,9 @@
         min-width: 1200px;
         height: 100%;
     }
+    .content {
+        
+    }
 </style>
 <script>
     module.exports = {
@@ -18,7 +25,9 @@
             }
         },
         components: {
-            'index-header': require('../components/header/header.vue')
+            'index-header': require('../components/header/header.vue'),
+            'condition-select': require('../components/conditions-select/conditions-select.vue'),
+            'condition-table': require('../components/conditions-table/conditions-table.vue')
         }
     }
 </script>
