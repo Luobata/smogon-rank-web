@@ -173,8 +173,10 @@ var main = function (type, rank, classRange, time, fileRoot, name) {
     Promise.all(downloadArr)
         .then(function () {
             console.log('all over');
-            rankA = logFormate(dist, month);
-            rankB = logFormate(dist, lastmonth);
+            rankA = logFormate(dist, lastmonth);
+            rankB = logFormate(dist, month);
+        }, function () {
+            console.log('download file');
         })
         .then (function () {
             files = rankFormate(rankA, rankB);
