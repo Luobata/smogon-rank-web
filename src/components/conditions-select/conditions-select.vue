@@ -1,27 +1,27 @@
 <template>
     <div class="select">
-        <el-select v-model="defaultValue.type" placeholder="单双打">
+        <el-select v-model="defaultValue.type" placeholder="单双打" @change="changeType">
             <el-option
             v-for="item in select.type"
             :label="item.label"
             :value="item.value">
             </el-option>
         </el-select>
-        <el-select v-model="defaultValue.class" placeholder="分级">
+        <el-select v-model="defaultValue.class" placeholder="分级" @change="changeType">
             <el-option
             v-for="item in select.class"
             :label="item.label"
             :value="item.value">
             </el-option>
         </el-select>
-        <el-select v-model="defaultValue.rank" placeholder="分段">
+        <el-select v-model="defaultValue.rank" placeholder="分段" @change="changeType">
             <el-option
             v-for="item in select.rank"
             :label="item.label"
             :value="item.value">
             </el-option>
         </el-select>
-        <el-select v-model="defaultValue.time" placeholder="日期">
+        <el-select v-model="defaultValue.time" placeholder="日期" @change="changeType">
             <el-option
             v-for="item in select.time"
             :label="item.label"
@@ -43,7 +43,7 @@
 </style>
 <script>
     var enumConfig = require('../../lib/config.json');
-    var condition = require('../../data/model/condition');
+    var rank = require('../../data/model/rank');
     module.exports = {
         data: function () {
             return {
@@ -53,17 +53,36 @@
                     time: '',
                     class: ''
                 },
-                select: enumConfig.select
+                select: enumConfig.select,
+                init: false
+            }
+        },
+        methods: {
+            changeType: function (value) {
+                var that = this;
+                if (!that.init) return;
+                if (!that.defaultValue.type || !that.defaultValue.rank || !that.defaultValue.time || !that.defaultValue.class) return;
+                rank.getRankData({
+                    type: that.defaultValue.type,
+                    rank: that.defaultValue.rank,
+                    time: that.defaultValue.time,
+                    classRange: that.defaultValue.class,
+                    pageNum: 1
+                });
             }
         },
         beforeMount: function () {
             var that = this;
-            condition.getConditionList(function (data) {
+            rank.getConditionList(function (data) {
                 that.select = data;
                 for (var k in data) {
                     that.defaultValue[k] = data[k][0].value;
                 }
             });
+        },
+        mounted: function () {
+            var that = this;
+            that.init = true;
         }
     };
 </script>

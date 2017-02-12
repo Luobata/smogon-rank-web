@@ -12,16 +12,17 @@ var download = function (downloadUrl, filePath, name) {
         };
 
         var fileName = url.parse(downloadUrl).pathname.split('/').pop();
-        var file = fs.createWriteStream(filePath + name);
+        //var file = fs.createWriteStream(filePath + name);
+        var file = fs.writeFileSync(filePath + name);
         console.log(filePath + name);
 
         http.get(options, function(res) {
             res.on('data', function(data) {
-                //fs.appendFileSync(filePath + fileName, data, 'utf-8');
-                file.write(data, 'utf-8')
+                fs.appendFileSync(filePath + name, data, 'utf-8');
+                //file.write(data, 'utf-8')
             });
             res.on('end', function() {
-                file.end();
+                //file.end();
                 resolve(res.statusCode);
                 console.log('downloaded');
             });

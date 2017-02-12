@@ -13,15 +13,33 @@ var enumType = util.arrToObject(config.type, 'value', 'label');
 var enumRank = util.arrToObject(config.rank, 'value', 'label');
 var enumClass = util.arrToObject(config.class, 'value', 'label');
 
-var getData = function (type, rank, classRange, time) {
+var splice = function (data, pageNum) {
+    var arr = [];
+    var pageSize = 10;
+    for (var k in data) {
+        data[k].name = k;
+        if (parseFloat(data[k].rankChange) > 0) {
+            data[k].rankChange = '+' + data[k].rankChange;
+        }
+        if (parseFloat(data[k].change) > 0) {
+            data[k].change = '+' + data[k].change;
+        }
+        arr.push(data[k]);
+    }
+    return {
+        list: arr.slice((pageNum - 1) * pageSize, pageNum * pageSize),
+        total: arr.length
+    }
+};
+
+var getData = function (type, rank, classRange, time, pageNum) {
     var fileName = enumType[type] + '-'
         + enumRank[rank] + '-'
         + enumClass[classRange] + '-'
         + time;
     var dist = './server/data/source/' + fileName + '.json';
-    console.log(dist);
     if (fs.existsSync(dist)) {
-        return JSON.parse(fs.readFileSync(dist));
+        return splice(JSON.parse(fs.readFileSync(dist)), pageNum);
     } else {
         return {
             error: '无筛选数据'

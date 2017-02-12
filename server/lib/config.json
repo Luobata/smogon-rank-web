@@ -32,11 +32,6 @@
                 "label": "OU",
                 "tag": "ou",
                 "value": 2
-            },
-            {
-                "label": "UU",
-                "tag": "uu",
-                "value": 3
             }
         ],
         "time": [

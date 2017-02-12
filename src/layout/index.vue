@@ -3,7 +3,7 @@
         <index-header></index-header>
         <div class="content">
             <condition-select></condition-select>
-            <condeition-table></condeition-table>
+            <condition-table></condition-table>
         </div>
     </div>
 </template>
@@ -15,7 +15,8 @@
         height: 100%;
     }
     .content {
-        
+        width: 1200px;
+        margin: 50px auto;
     }
 </style>
 <script>
