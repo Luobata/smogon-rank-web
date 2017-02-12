@@ -49,6 +49,7 @@
 <style scoped>
     .pagination {
         float: right;
+        margin: 20px 0 0 0;
     }
 </style>
 <script>
@@ -70,7 +71,7 @@
                 var that = this;
                 that.pageInfo.pageNum = page;
                 rank.getRankData({
-                    pageNum: page
+                    pageNum: that.pageInfo.pageNum
                 });
             }
         },
@@ -79,6 +80,9 @@
             rank.on('getRankData', function (data) {
                 that.tableData = data.list;
                 that.pageInfo.total = data.total;
+            });
+            rank.on('setPageNum', function (data) {
+                that.pageInfo.pageNum = data;
             });
         }
     };

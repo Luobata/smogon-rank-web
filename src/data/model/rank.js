@@ -25,10 +25,14 @@ _.extend(model, {
         condition.query = params;
         condition.pageInfo.pageNum = params.pageNum;
     },
+    setPageNum: function (params, fn) {
+        model.trigger('setPageNum', params.pageNum);
+    },
     getRankData: function (params, fn) {
         if (params.type) {
             condition.query = params;
             condition.pageInfo.pageNum = params.pageNum;
+            model.setPageNum(params.pageNum);
         } else {
             condition.query.pageNum = params.pageNum;
             params = condition.query;
