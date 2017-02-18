@@ -23,8 +23,8 @@ app.use(webpackHotMiddleware(compiler));
 app
     .use(routerComponent.routes())
     .use(router.allowedMethods());;
-app.use(require('koa-static')(path.join(process.cwd(), '/assets')));
-app.use(require('koa-serve-index')(path.join(process.cwd(), '/src')));
+app.use(require('koa-static')(path.join(process.cwd(), '/dist')));
+//app.use(require('koa-serve-index')(path.join(process.cwd(), '/src')));
 
 
 app.listen(3000);

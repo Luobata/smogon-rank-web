@@ -1,1 +1,1 @@
-module.exports = '//http://118.89.220.236:3000/assets/';
+module.exports = '//118.89.220.236:3000/';

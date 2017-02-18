@@ -6,7 +6,7 @@ var glob = require('glob');
 var srcDir = path.resolve(process.cwd(), 'src').replace(/\\/g, '/');
 var jsEntryDir = path.resolve(srcDir, 'page').replace(/\\/g, '/');
 var htmlEntryDir = srcDir;
-var assetsDir = path.resolve(process.cwd(), 'assets').replace(/\\/g, '/');
+var assetsDir = path.resolve(process.cwd(), 'dist').replace(/\\/g, '/');
 var jsDir = '/src/page/';
 var assetsSubDirectory = 'static/';
 var libMerge = true;
@@ -19,7 +19,7 @@ var config = {
     devtool: '#source-map',
     entry: getEntry(),
     output: {
-        path: path.join(process.cwd(), 'assets'),
+        path: path.join(process.cwd(), 'dist'),
         filename: jsDir + '/[name].js',
         publicPath: require('./domain.js')
     },
