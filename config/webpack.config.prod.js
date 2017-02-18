@@ -1,26 +1,28 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CompressionWebpackPlugin = require('compression-webpack-plugin')
+var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var glob = require('glob');
-var srcDir = path.resolve(process.cwd(), 'src');
-var jsEntryDir = path.resolve(srcDir, 'page')
+var srcDir = path.resolve(process.cwd(), 'src').replace(/\\/g, '/');
+var jsEntryDir = path.resolve(srcDir, 'page').replace(/\\/g, '/');
 var htmlEntryDir = srcDir;
-var assetsDir = path.resolve(process.cwd(), 'assets');
-var jsDir = 'src/page/';
+var assetsDir = path.resolve(process.cwd(), 'assets').replace(/\\/g, '/');
+var jsDir = '/src/page/';
 var assetsSubDirectory = 'static/';
 var libMerge = true;
 var cssSourceMap = true;
-var singleModule = [];
+var singleModule = ['vue', 'element-ui'];
 var env = process.env.NODE_ENV;
 var utils = require('./utils');
 
 var config = {
-    devtool: 'eval-source-map',
+    devtool: '#source-map',
     entry: getEntry(),
     output: {
         path: path.join(process.cwd(), 'assets'),
-        filename: jsDir + '[name].js',
-        publicPath: '/'
+        filename: jsDir + '/[name].js',
+        publicPath: require('./domain.js')
     },
     plugins: [
         new webpack.DefinePlugin({
@@ -29,8 +31,25 @@ var config = {
             }
         }),
         new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compressor: {
+                warnings: false
+            }
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            minChunks: function (module, count) {
+                return (
+                    module.resource && /\.js$/.test(module.resource)
+                    && module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0
+                )
+            }
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest',
+            chunks: ['vendor']
+        })
     ],
     module: {
         loaders: [
@@ -118,7 +137,7 @@ function getEntry() {
 
 var files = glob.sync(path.resolve(htmlEntryDir, '**/*.html'));
 files.forEach(function(filename) {
-    filename = filename.replace(/\//g, '\\');
+    // filename = filename.replace(/\//g, '\\');
     var m = filename.match(/(.+)\.html$/);
     if (m) {
         var conf = {
@@ -127,7 +146,8 @@ files.forEach(function(filename) {
             hash: true, //为静态资源生成hash值
             minify: { //压缩HTML文件
                 removeComments: true, //移除HTML中的注释
-                collapseWhitespace: false //删除空白符与换行符
+                removeAttributeQuotes: true,
+                collapseWhitespace: true //删除空白符与换行符
             },
             filename: filename.replace(srcDir, assetsDir)
         };
