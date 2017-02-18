@@ -31,5 +31,10 @@ router.get(/^\/data(?:\/|abc$)/, function *(next) {
     console.log(this.params);
 });
 
+router.get('/dataInit', function *(next) {
+    this.status = 200;
+    this.body = require('../controller/dataInit');
+});
+
 
 module.exports = router;
