@@ -118,7 +118,7 @@ function getEntry() {
 
 var files = glob.sync(path.resolve(htmlEntryDir, '**/*.html'));
 files.forEach(function(filename) {
-    filename = filename.replace(/\//g, '\\');
+    // filename = filename.replace(/\//g, '\\');
     var m = filename.match(/(.+)\.html$/);
     if (m) {
         var conf = {
