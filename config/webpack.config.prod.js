@@ -1,10 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-<<<<<<< HEAD
-var CompressionWebpackPlugin = require('compression-webpack-plugin')
-=======
->>>>>>> 19086b7f368c6c50a03e6f9cb01d8b64fac5fe39
 var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var glob = require('glob');
 var srcDir = path.resolve(process.cwd(), 'src').replace(/\\/g, '/');
