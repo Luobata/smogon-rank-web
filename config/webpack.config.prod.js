@@ -1,12 +1,13 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var glob = require('glob');
-var srcDir = path.resolve(process.cwd(), 'src');
-var jsEntryDir = path.resolve(srcDir, 'page')
+var srcDir = path.resolve(process.cwd(), 'src').replace(/\\/g, '/');
+var jsEntryDir = path.resolve(srcDir, 'page').replace(/\\/g, '/');
 var htmlEntryDir = srcDir;
-var assetsDir = path.resolve(process.cwd(), 'assets');
-var jsDir = 'src/page/';
+var assetsDir = path.resolve(process.cwd(), 'assets').replace(/\\/g, '/');
+var jsDir = '/src/page/';
 var assetsSubDirectory = 'static/';
 var libMerge = true;
 var cssSourceMap = true;
@@ -19,8 +20,8 @@ var config = {
     entry: getEntry(),
     output: {
         path: path.join(process.cwd(), 'assets'),
-        filename: jsDir + '[name].js',
-        publicPath: '/'
+        filename: jsDir + '/[name].js',
+        publicPath: require('./domain.js')
     },
     plugins: [
         new webpack.DefinePlugin({
@@ -30,7 +31,12 @@ var config = {
         }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compressor: {
+                warnings: false
+            }
+        })
     ],
     module: {
         loaders: [
@@ -118,7 +124,7 @@ function getEntry() {
 
 var files = glob.sync(path.resolve(htmlEntryDir, '**/*.html'));
 files.forEach(function(filename) {
-    filename = filename.replace(/\//g, '\\');
+    // filename = filename.replace(/\//g, '\\');
     var m = filename.match(/(.+)\.html$/);
     if (m) {
         var conf = {
