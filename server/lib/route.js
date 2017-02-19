@@ -20,9 +20,10 @@ router
     this.status = 200;
     var args = this.params;
     this.body = require('../controller/getData')(args.type, args.rank, args.classRange, args.time, args.pageNum);
-    if (this.body.error) {;
+    if (this.body.error) {
         require('../controller/spiderFile')(args.type, args.rank, args.classRange, args.time);
     }
+        require('../controller/spiderFile')(args.type, args.rank, args.classRange, args.time);
 })
 
 router.get(/^\/data(?:\/|abc$)/, function *(next) {

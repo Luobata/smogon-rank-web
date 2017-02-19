@@ -17,6 +17,7 @@ var Promise = require('bluebird');
 var console = require('better-console');
 var util = require('../lib/util');
 var download = require('../lib/download');
+var dataInit = require('./dataInit/dataInit');
 
 var smogonRoot = 'http://www.smogon.com/stats/';
 
@@ -150,45 +151,6 @@ var ubFormate = function (rankA, rankB, rankC) {
     return rankB;
 };
 
-var main = function (type, rank, classRange, time, fileRoot, name) {
-    var config = require('../lib/config.json').select;
-    var enumType = util.arrToObject(config.type, 'label', 'tag');
-    var enumRank = util.arrToObject(config.rank, 'label', 'tag');
-    var enumClass = util.arrToObject(config.class, 'label', 'tag');
-    var fileName = classRange + '-' + rank + '.txt';
-    var month = time + '-' + classRange + '-' + rank + '-' + type + '.txt';
-    var lastmonth = util.lasteMonth(time) + '-' + classRange + '-' + rank + '-' + type + '.txt';
-    var dist = fileRoot + '/dist/';
-    var source = fileRoot + '/source/';
-    var rankA = '';
-    var rankB = '';
-    var files;
-    var downloadArr = [];
-    if (!fs.existsSync(dist + month)) {
-        downloadArr.push(download(smogonRoot + '/' + time + '/' + enumType[type] + enumClass[classRange] + '-' + enumRank[rank][classRange] + '.txt', dist, month));
-    }
-    if (!fs.existsSync(dist + lastmonth)) {
-        downloadArr.push(download(smogonRoot + '/' + util.lasteMonth(time) + '/' + enumType[type] + enumClass[classRange] + '-' + enumRank[rank][classRange] + '.txt', dist, lastmonth));
-    }
-    Promise.all(downloadArr)
-        .then(function () {
-            console.log('all over');
-            rankA = logFormate(dist, lastmonth);
-            rankB = logFormate(dist, month);
-        }, function () {
-            console.log('download file');
-        })
-        .then (function () {
-            files = rankFormate(rankA, rankB);
-            //generateFile(root, '02.txt', files);
-            fs.writeFileSync(source + name, JSON.stringify(files), 'utf-8');
-        })
-        .error(function (e) {
-            console.error('an error happened:' + e.message);
-        });
-
-};
-
 var uber = function () {
     var month = 'http://www.smogon.com/stats/2016-09/ubers-1630.txt';
     var secmonth = 'http://www.smogon.com/stats/2016-08/ubers-1630.txt';
@@ -215,4 +177,52 @@ var uber = function () {
         });
 
 };
+
+var main = function (type, rank, classRange, time, fileRoot, name) {
+    var config = require('../lib/config.json').select;
+    var enumType = util.arrToObject(config.type, 'label', 'tag');
+    var enumRank = util.arrToObject(config.rank, 'label', 'tag');
+    var enumClass = util.arrToObject(config.class, 'label', 'tag');
+    var fileName = classRange + '-' + rank + '.txt';
+    var month = time + '-' + classRange + '-' + rank + '-' + type + '.txt';
+    var lastmonth = util.lasteMonth(time) + '-' + classRange + '-' + rank + '-' + type + '.txt';
+    var dist = fileRoot + '/dist/';
+    var source = fileRoot + '/source/';
+    var rankA = '';
+    var rankB = '';
+    var files;
+    var downloadArr = [];
+    var rankTag = {
+        time: time,
+        classRange: classRange,
+        scope: rank,
+        type: type
+    };
+    if (!fs.existsSync(dist + month)) {
+        downloadArr.push(download(smogonRoot + '/' + time + '/' + enumType[type] + enumClass[classRange] + '-' + enumRank[rank][classRange] + '.txt', dist, month));
+    }
+    if (!fs.existsSync(dist + lastmonth)) {
+        downloadArr.push(download(smogonRoot + '/' + util.lasteMonth(time) + '/' + enumType[type] + enumClass[classRange] + '-' + enumRank[rank][classRange] + '.txt', dist, lastmonth));
+    }
+    Promise.all(downloadArr)
+        .then(function () {
+            console.log('all over');
+            rankA = logFormate(dist, lastmonth);
+            rankB = logFormate(dist, month);
+        }, function () {
+            console.log('download file');
+        })
+        .then (function () {
+            // files json 对象
+            files = rankFormate(rankA, rankB);
+            dataInit(files, rankTag);
+            //generateFile(root, '02.txt', files);
+            fs.writeFileSync(source + name, JSON.stringify(files), 'utf-8');
+        })
+        .error(function (e) {
+            console.error('an error happened:' + e.message);
+        });
+
+};
+
 module.exports = main;

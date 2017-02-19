@@ -2,10 +2,10 @@ var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var glob = require('glob');
-var srcDir = path.resolve(process.cwd(), 'src');
-var jsEntryDir = path.resolve(srcDir, 'page')
+var srcDir = path.resolve(process.cwd(), 'src').replace(/\\/g, '/');
+var jsEntryDir = path.resolve(srcDir, 'page').replace(/\\/g, '/')
 var htmlEntryDir = srcDir;
-var assetsDir = path.resolve(process.cwd(), 'assets');
+var assetsDir = path.resolve(process.cwd(), 'assets').replace(/\\/g, '/');
 var jsDir = 'src/page/';
 var assetsSubDirectory = 'static/';
 var libMerge = true;
@@ -30,7 +30,20 @@ var config = {
         }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            minChunks: function (module, count) {
+                return (
+                    module.resource && /\.js$/.test(module.resource)
+                    && module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0
+                )
+            }
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest',
+            chunks: ['vendor']
+        })
     ],
     module: {
         loaders: [

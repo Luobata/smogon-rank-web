@@ -1,0 +1,17 @@
+{
+    "name": "",
+    "name_zh": "",
+    "img": "",
+    "rank": [
+        {
+            "time": "2017-01",
+            "class": "ou",
+            "usage": "1825",
+            "type": "single",
+            "rank": 1,
+            "usage": "50%",
+            "rankChange": 0,
+            "usageChange": "-10%"
+        }
+    ]
+}
