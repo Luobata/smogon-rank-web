@@ -21,11 +21,10 @@ var findDocuments = function (db, arr, callback) {
     var findOne = function (item) {
         return new Promise(function (resolve) {
             collection.findOne({name: item.name}, function (err, doc) {
-                var tmpRank;
                 assert.equal(null, err);
-                if (doc) {
-                    console.log(2);
-                    tmpRank = doc.rank.push(item.rank[0]);
+                if (doc !== null) {
+                    // TODO push 先判断是否存在
+                    doc.rank.push(item.rank[0]);
                     // update
                     updateArr.push({
                         filter: {
@@ -33,13 +32,12 @@ var findDocuments = function (db, arr, callback) {
                         },
                         update: {
                             $set: {
-                                rank: tmpRank
+                                rank: doc.rank
                             }
                         }
                     });
                 } else {
                     // insert
-                    console.log(1);
                     insertArr.push(item);
                 }
                 resolve();
@@ -49,7 +47,6 @@ var findDocuments = function (db, arr, callback) {
     arr.forEach(function (item) {
         findArr.push(findOne(item));
     });
-    console.log(findArr.length);
     Promise
         .all(findArr)
         .then(function () {
@@ -77,7 +74,7 @@ var updateDocuments = function (db, arr) {
         var collection = db.collection('rank');
         var updateArr = [];
         arr.forEach(function (item) {
-            updateArr.push(curd.update(collection, item));
+            updateArr.push(curd.updateOne(collection, item));
         });
 
         Promise

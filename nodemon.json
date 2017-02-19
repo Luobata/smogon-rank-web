@@ -1,6 +1,7 @@
 {
     "vervose": true,
     "ignore": [
-        "src/*"
+        "src/*",
+        "server/data/*"
     ]
 }
