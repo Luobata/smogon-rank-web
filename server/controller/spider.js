@@ -78,14 +78,14 @@ var generateFile = function (root, dist, fileName, con) {
         title[i] = title[i] + '\r\n';
         console.log(title[i]);
     }
-    fs.writeFileSync(root + fileName, title,'utf-8');
+    fs.writeFileSync(dist + fileName, title,'utf-8');
     var pokemons = logs.splice(0, 5);
     for (var k in con) {
         var pok = logs.shift() + con[k].rankChange + '\r\n';
-        fs.appendFileSync(root + fileName, pok, 'utf-8');
+        fs.appendFileSync(dist + fileName, pok, 'utf-8');
     }
     if (logs) {
-        fs.appendFileSync(root + fileName, logs, 'utf-8');
+        fs.appendFileSync(dist + fileName, logs, 'utf-8');
     }
 };
 
