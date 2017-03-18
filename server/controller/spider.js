@@ -69,22 +69,23 @@ var logFormate = function (root, fileName) {
     return rank;
 };
 
-var generateFile = function (root, fileName, con) {
+var generateFile = function (root, dist, fileName, con) {
     var log = fs.readFileSync(root + fileName, 'utf-8');
     var logs = log.split('\n');
     var title = logs.slice(0, 5);
+    //fileName = fileName.replace(/json$/, 'txt');
     for (var i = 0; i < title.length; i++) {
         title[i] = title[i] + '\r\n';
         console.log(title[i]);
     }
-    fs.writeFileSync(root + 'file.txt', title,'utf-8');
+    fs.writeFileSync(root + fileName, title,'utf-8');
     var pokemons = logs.splice(0, 5);
     for (var k in con) {
         var pok = logs.shift() + con[k].rankChange + '\r\n';
-        fs.appendFileSync(root + 'file.txt', pok, 'utf-8');
+        fs.appendFileSync(root + fileName, pok, 'utf-8');
     }
     if (logs) {
-        fs.appendFileSync(root + 'file.txt', logs, 'utf-8');
+        fs.appendFileSync(root + fileName, logs, 'utf-8');
     }
 };
 
@@ -188,6 +189,7 @@ var main = function (type, rank, classRange, time, fileRoot, name) {
     var lastmonth = util.lasteMonth(time) + '-' + classRange + '-' + rank + '-' + type + '.txt';
     var dist = fileRoot + '/dist/';
     var source = fileRoot + '/source/';
+    var txt = fileRoot + '/txt/';
     var rankA = '';
     var rankB = '';
     var files;
@@ -215,8 +217,8 @@ var main = function (type, rank, classRange, time, fileRoot, name) {
         .then (function () {
             // files json 对象
             files = rankFormate(rankA, rankB);
-            dataInit(files, rankTag);
-            //generateFile(root, '02.txt', files);
+            //dataInit(files, rankTag);
+            generateFile(dist, txt, month, files);
             fs.writeFileSync(source + name, JSON.stringify(files), 'utf-8');
         })
         .error(function (e) {

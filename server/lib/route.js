@@ -23,7 +23,7 @@ router
     if (this.body.error) {
         require('../controller/spiderFile')(args.type, args.rank, args.classRange, args.time);
     }
-        require('../controller/spiderFile')(args.type, args.rank, args.classRange, args.time);
+        //require('../controller/spiderFile')(args.type, args.rank, args.classRange, args.time);
 })
 
 router.get(/^\/data(?:\/|abc$)/, function *(next) {

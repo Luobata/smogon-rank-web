@@ -22,7 +22,7 @@ var spiderFile = function (type, rank, classRange, time) {
         + time;
     var dist = './server/dist/' + fileName + '.json';
     var source = './server/data/source/' + fileName + '.json';
-    if (!fs.existsSync(source)) {
+    if (fs.existsSync(source)) {
         return false;
     } else {
         return spider(enumType[type], enumRank[rank], enumClass[classRange], time, './server/data/', fileName + '.json');
