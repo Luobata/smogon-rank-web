@@ -37,5 +37,11 @@ router.get('/dataInit', function *(next) {
     this.body = require('../controller/dataInit');
 });
 
+router.get('/spiderFile/:month/:fileName', function *(next) {
+    var args = this.params;
+
+    require('../controller/spiderRank.js')(args.month, args.fileName);
+});
+
 
 module.exports = router;

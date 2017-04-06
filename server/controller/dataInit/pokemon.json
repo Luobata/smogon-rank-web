@@ -4,14 +4,9 @@
     "img": "",
     "rank": [
         {
-            "time": "2017-01",
-            "class": "ou",
-            "usage": "1825",
-            "type": "single",
+            "month": "2017-01",
             "rank": 1,
-            "usage": "50%",
-            "rankChange": 0,
-            "usageChange": "-10%"
+            "usage": "50%"
         }
     ]
 }

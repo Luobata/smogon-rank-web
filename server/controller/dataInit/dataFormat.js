@@ -1,6 +1,6 @@
 var temp = require('./pokemon.json');
 
-module.exports = function (data, rankTag) {
+module.exports = function (data, month, type) {
     var arr = [];
     var i;
     var j;
@@ -10,14 +10,10 @@ module.exports = function (data, rankTag) {
         key = JSON.parse(JSON.stringify(temp));
         key['name'] = i.trim();
         key['rank'] = [{
-            time: rankTag.time,
-            class: rankTag.classRange,
-            scope: rankTag.scope,
-            type: rankTag.type,
+            type: type,
+            month: month,
             rank: data[i].rank,
-            usage: data[i].usage,
-            rankChange: data[i].rankChange,
-            usageChange: data[i].change
+            usage: data[i].usage
         }]
         arr.push(key);
     }

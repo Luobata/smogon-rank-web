@@ -21,21 +21,28 @@ var findDocuments = function (db, arr, callback) {
     var findOne = function (item) {
         return new Promise(function (resolve) {
             collection.findOne({name: item.name}, function (err, doc) {
+                var has = false;
                 assert.equal(null, err);
                 if (doc !== null) {
-                    // TODO push 先判断是否存在
-                    doc.rank.push(item.rank[0]);
-                    // update
-                    updateArr.push({
-                        filter: {
-                            name: item.name
-                        },
-                        update: {
-                            $set: {
-                                rank: doc.rank
-                            }
+                    doc.rank.forEach(function (it) {
+                        if (it.type === item.rank[0].type && it.month === item.rank[0].month) {
+                            has = true;
                         }
                     });
+                    if (!has) {
+                        doc.rank.push(item.rank[0]);
+                        // update
+                        updateArr.push({
+                            filter: {
+                                name: item.name
+                            },
+                            update: {
+                                $set: {
+                                    rank: doc.rank
+                                }
+                            }
+                        });
+                    }
                 } else {
                     // insert
                     insertArr.push(item);
@@ -102,14 +109,17 @@ var insertDocuments = function (db, arr) {
     });
 };
 
-module.exports = function (data, rankTag) {
-    var url = 'mongodb://localhost:27017/test';
-    var arr = require('./dataFormat')(data, rankTag);
-    MongoClient.connect(url, function(err, db) {
-        assert.equal(null, err);
-        console.log("Connected correctly to server");
-        findDocuments(db, arr, function () {
-            db.close();
+module.exports = function (data, month, type) {
+    return new Promise(function (resolve) {
+        var url = 'mongodb://localhost:27017/test';
+        var arr = require('./dataFormat')(data, month, type);
+        MongoClient.connect(url, function(err, db) {
+            assert.equal(null, err);
+            console.log("Connected correctly to server");
+            findDocuments(db, arr, function () {
+                db.close();
+                resolve();
+            });
         });
     });
 };
